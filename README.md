@@ -2,8 +2,8 @@
 
 ## Progress
 
-- Figured out how to use the API from TD Ameritrade and FRED (Federal Reserve Economic Data)
-- Able to freely import data
+- Figured out how to use the API from [TD Ameritrade](https://developer.tdameritrade.com/) and [FRED (Federal Reserve Economic Data)](https://fred.stlouisfed.org/docs/api/fred/)
+- Able to freely import data from TD Ameritrade API, FRED API, and Sentiment API (examples in td_test.py, fred_test.py, and stm_test.py)
 
 ### Avaliable Data:
 
@@ -18,7 +18,7 @@ TD Ameritrade
 - Get Mover ()
 
 FRED API (Federal Reserve Economic Data)
-- Basically any economic data
+- [Basically any economic data](https://fred.stlouisfed.org/)
 - Including historical data
 
 Social Sentiment
@@ -41,3 +41,7 @@ Social Sentiment
 
 1. Build Backtesting platform (data handling - numpy&pandas?)
 2. Produce a bunch of visualization on testing ideas
+
+## Resources
+- [fredapi documentation](https://github.com/mortada/fredapi)
+- [TD API doumentation](url)
