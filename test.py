@@ -1,4 +1,5 @@
 import tda
+import json
 
 API_KEY = "c20020807"
 REDIRECT_URL = "http://localhost:8080"
@@ -15,3 +16,10 @@ client = tda.auth.easy_client(
     REDIRECT_URL,
     TOKEN_PATH,
     make_webdriver)
+
+r = client.search_instruments("AAPL",client.Instrument.Projection.FUNDAMENTAL)
+
+with open('data.txt', 'w') as outfile:
+    json.dump(r.json(), outfile)
+
+print("Done.")
