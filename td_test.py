@@ -19,10 +19,20 @@ client = tda.auth.easy_client(
     make_webdriver)
 
 #Calling fundamental data for aapl
-r = client.search_instruments("AAPL",client.Instrument.Projection.FUNDAMENTAL)
+r = client.get_option_chain(
+    "AAPL",
+    strike=131,
+    strike_count=5,
+    include_quotes=True,
+    strike_range=client.Options.StrikeRange.ALL,
+    interval=5
+
+    )
+
+print(r)
+print(r.status_code)
 
 #Writing data to file
 with open('data.txt', 'w') as outfile:
     json.dump(r.json(), outfile)
 
-#Getting data from fred api
