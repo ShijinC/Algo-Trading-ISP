@@ -75,21 +75,5 @@ print(r)
 #Writing data to file
 with open('data.json', 'w') as outfile:
     json.dump(r.json(), outfile)
-    
-with open('data.json') as outfile:
-    data = json.load(outfile)
 
-aapl = option_chain(data)
-
-
-print("\n",aapl.callraw)
-print("\n\n\n\n\n")
-
-print(aapl.calls[0])
-print("\n")
-print(aapl.calls[0].type)
-print("\n")
-print(aapl.calls[0].last)
-print("\n")
-print(aapl.calls[0].bid)
-print("\n")
+print("\n","DONE")
