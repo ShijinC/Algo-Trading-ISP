@@ -1,5 +1,6 @@
 import tda
 import json
+import datetime
 
 TD_API_KEY = "c20020807"
 REDIRECT_URL = "http://localhost:8080"
@@ -17,10 +18,11 @@ class option_chain():
         for key,value in self.callraw.items():
             for k,v in value.items():
                 for i in v:
-                    self.calls.append(options(i))
+                    self.calls.append(options(i,data["underlying"]["last"]))
 
 class options():
-    def __init__(self,dic):
+    def __init__(self,dic,price):
+        self.stockprice = float(price)
         self.type = dic["putCall"]
         self.bid = float(dic["bid"])
         self.ask = float(dic["ask"])
@@ -45,6 +47,8 @@ class options():
         self.expiredate = dic["expirationDate"]
         self.daystoexpiration = int(dic["daysToExpiration"])
         self.inthemoney = dic["inTheMoney"]
+        self.intrinsic = self.stockprice - self.strike
+        self.extrinsic = self.last - self.intrinsic
 
 #TD Ameritrade API Setup
 def make_webdriver():
@@ -63,10 +67,12 @@ client = tda.auth.easy_client(
 r = client.get_option_chain(
     "AAPL",
     strike=131,
-    #strike_count=5,
+    strike_count=10,
     include_quotes=True,
     strike_range=client.Options.StrikeRange.ALL,
-    interval=1
+    interval=1,
+    from_date=datetime.datetime(2021, 4, 17),
+    to_date=datetime.datetime(2021, 4, 24)
 
     )
 
