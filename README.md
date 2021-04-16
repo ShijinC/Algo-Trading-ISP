@@ -4,6 +4,17 @@
 
 - Figured out how to use the API from [TD Ameritrade](https://developer.tdameritrade.com/) and [FRED (Federal Reserve Economic Data)](https://fred.stlouisfed.org/docs/api/fred/)
 - Able to freely import data from TD Ameritrade API, FRED API, and Sentiment API (examples in td_test.py, fred_test.py, and stm_test.py)
+- formatted option chain data from td
+- Ready to visualize
+
+## Next Steps
+
+1. Read Resources on creating distribution
+2. Create distribution generation model
+3. Travarse through selected targets
+4. Trade the ones with the largest margin of error
+5. Build backtesting platform to calculate performance data on the model
+6. Visualize!!
 
 ### Avaliable Data:
 
@@ -28,20 +39,10 @@ Social Sentiment
 
 ## Current Ideas
 - Using Option Chain data to create probability distribution of the underlying.
-- Some kind of sentimental analysis. (Stocktwits API,DIY Twitter (Tweepy), SocialSentiment.io (free), google sentiment analysis tool)
-- focus on comparative advantage adjusted for S&P 500
-- Use getMovers from TD API 
-
-- Have to have some kind of visualization, using matplotlib
-- Have to have backtesting platform 
-- TD API rate limit: 120/min   7200/hr   172800/day
-- Reddit Algo Trading Side Bar resources.
-
-## Next Steps
-
-1. Build Backtesting platform (data handling - numpy&pandas?)
-2. Produce a bunch of visualization on testing ideas
 
 ## Resources
 - [fredapi documentation](https://github.com/mortada/fredapi)
 - [TD API doumentation](url)
+- [Option Based Risk-Neutual Probability Distribution](https://www.newyorkfed.org/medialibrary/media/research/staff_reports/sr677.pdf)
+- [Butterfly](https://www.morganstanley.com/content/dam/msdotcom/en/assets/pdfs/Options_Probabilities_Exhibit_Link.pdf)
+- [Calculation Paper](https://www.bankofengland.co.uk/-/media/boe/files/ccbs/resources/deriving-option-implied-probability-densities-for-foreign-exchange-markets.pdf)
