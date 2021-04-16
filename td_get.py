@@ -57,29 +57,33 @@ def make_webdriver():
     driver = webdriver.Chrome(ChromeDriverManager().install())
     return driver
 
-client = tda.auth.easy_client(
-    TD_API_KEY,
-    REDIRECT_URL,
-    TOKEN_PATH,
-    make_webdriver)
+def main():
+    client = tda.auth.easy_client(
+        TD_API_KEY,
+        REDIRECT_URL,
+        TOKEN_PATH,
+        make_webdriver)
 
-#Calling fundamental data for aapl
-r = client.get_option_chain(
-    "AAPL",
-    strike=131,
-    strike_count=10,
-    include_quotes=True,
-    strike_range=client.Options.StrikeRange.ALL,
-    interval=1,
-    from_date=datetime.datetime(2021, 4, 17),
-    to_date=datetime.datetime(2021, 4, 24)
+    #Calling fundamental data for aapl
+    r = client.get_option_chain(
+        "AAPL",
+        strike=131,
+        strike_count=10,
+        include_quotes=True,
+        strike_range=client.Options.StrikeRange.ALL,
+        interval=1,
+        from_date=datetime.datetime(2021, 4, 17),
+        to_date=datetime.datetime(2021, 4, 24)
 
-    )
+        )
 
-print(r)
+    print(r)
 
-#Writing data to file
-with open('data.json', 'w') as outfile:
-    json.dump(r.json(), outfile)
+    #Writing data to file
+    with open('data.json', 'w') as outfile:
+        json.dump(r.json(), outfile)
 
-print("\n","DONE")
+    print("\n","DONE")
+
+if __name__ == "__main__":
+    main()
