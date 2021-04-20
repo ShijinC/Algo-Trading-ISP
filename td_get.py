@@ -57,33 +57,37 @@ def make_webdriver():
     driver = webdriver.Chrome(ChromeDriverManager().install())
     return driver
 
-def main():
+def init():
+    global client
     client = tda.auth.easy_client(
         TD_API_KEY,
         REDIRECT_URL,
         TOKEN_PATH,
         make_webdriver)
 
-    #Calling fundamental data for aapl
+def test_client():
+    print(client.get_quote("aapl").json())
+
+def download_option_chain(ticker):
     r = client.get_option_chain(
-        "AAPL",
-        strike=131,
-        strike_count=10,
+        ticker,
+        strike=134,
+        strike_count=2,
         include_quotes=True,
-        strike_range=client.Options.StrikeRange.ALL,
-        interval=1,
-        from_date=datetime.datetime(2021, 4, 17),
-        to_date=datetime.datetime(2021, 4, 24)
-
+        interval=2,
+        from_date=datetime.datetime(2021, 4, 19),
+        to_date=datetime.datetime(2021, 4, 30)
         )
-
-    print(r)
-
-    #Writing data to file
-    with open('data.json', 'w') as outfile:
+    with open("./data/"+ticker+'.json', 'w') as outfile:
         json.dump(r.json(), outfile)
 
-    print("\n","DONE")
+    print("\n","Data Download Complete.")
+
+def main():
+    
+    init()
+    test_client()
+    download_option_chain("AAPL")
 
 if __name__ == "__main__":
     main()
