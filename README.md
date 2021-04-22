@@ -46,3 +46,5 @@ Social Sentiment
 - [Option Based Risk-Neutual Probability Distribution](https://www.newyorkfed.org/medialibrary/media/research/staff_reports/sr677.pdf)
 - [Butterfly](https://www.morganstanley.com/content/dam/msdotcom/en/assets/pdfs/Options_Probabilities_Exhibit_Link.pdf)
 - [Calculation Paper](https://www.bankofengland.co.uk/-/media/boe/files/ccbs/resources/deriving-option-implied-probability-densities-for-foreign-exchange-markets.pdf)
+- [Google Trend](https://trends.google.com/trends/explore?geo=US&q=doge)
+- [Google Trend API](https://towardsdatascience.com/google-trends-api-for-python-a84bc25db88f)
