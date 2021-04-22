@@ -1,23 +1,26 @@
 import math
-from scipy.stats import norm
 from td_get import *
 from td_read import *
+import autograd.numpy as np
+from autograd.scipy.stats import norm
+from autograd.extend import primitive, defvjp
+from autograd import grad
 
 #EVERYTHING IN PERCENTAGE VALUE
-def Black_Scholes_Option_Price(option,rfr,dividend):
-    spot = option.stockprice
-    life = option.daystoexpiration / 365
-    strike = option.strike
-    volatility = option.TV / 100
-    d1 = math.log(spot/strike) + life * (rfr - dividend + (volatility**2)/2)
-    d1 /= (volatility * math.sqrt(life))
-    d2 = d1 - volatility * math.sqrt(life)
-    price = spot * math.exp(dividend*-1*life) * norm.cdf(d1)
-    price -= strike * math.exp(rfr*-1*life) * norm.cdf(d2)
-    print("d1:  " + str(d1))
-    print("d2:  " + str(d2))
-    print("Nd1:  " + str(norm.cdf(d1)))
-    print("Nd2:  " + str(norm.cdf(d2)))
+def Black_Scholes_Option_Price(spot=133.0,life=0.1,strike=130.0,volatility=0.5,rfr=0.02,dividend=0.0):
+    #print(spot)
+    #print(life)
+    #print(strike)
+    #print(volatility)
+    #print(rfr)
+    #print(dividend)
+    d1 = (np.log(spot/strike) + life * (rfr - dividend + (volatility**2)/2)) / (volatility * (life**0.5))
+    d2 = d1 - volatility * np.sqrt(life)
+    price = spot * np.exp(dividend*-1*life) * norm.cdf(d1) - strike * np.exp(rfr*-1*life) * norm.cdf(d2)
+    #print("d1:  " + str(d1))
+    #print("d2:  " + str(d2))
+    #print("Nd1:  " + str(norm.cdf(d1)))
+    #print("Nd2:  " + str(norm.cdf(d2)))
     return price
 
 """ def Black_Scholes_Option_Volatility(spot,strike,life,volatility,rfr,dividend):
@@ -46,31 +49,48 @@ def vomma(option,rfr,dividend):
     return vomma
 
 
-def RND(option,rfr,dividend):
-    spot = option.stockprice
-    life = option.daystoexpiration
-    strike = option.strike
-    volatility = option.TV / 100
-    vega = option.vega
-    vomma = vomma(option,rfr,dividend)
-    d1 = math.log(spot/strike) + life * (rfr - dividend + (volatility**2)/2)
-    d1 /= (volatility * math.sqrt(life))
-    d2 = d1 - volatility * math.sqrt(life)
-    probability = norm.cdf(d2) * (
-        1/(volatility*strike*math.sqrt(life))+
-        2*d1
-    )
+def strike(num):
+    strike = 
 
-def dC(options):
-    last = [i.last for i in options]
-    dlast = [abs(j-i) for i, j in zip(last[:-1], last[1:])]
-    ddlast = [abs(j-i) for i, j in zip(dlast[:-1], dlast[1:])]
-    return last,dlast,ddlast
+def last(options,rfr,div):
+    high_strike = float(options[-1].strike)
+    low_strike = float(options[0].strike)
+    num = 50
+    strikes = np.linspace(high_strike,low_strike,num=num)
+    lasts,dlasts,ddlasts = [0 for i in range(50)]
+    for option in options:
+        lasts,dlasts,ddlasts += RND(option,rfr,div)
+    return lasts,dlasts,ddlasts
+
+def dlast(options,rfr,div):
+    high_strike = float(options[-1].strike)
+    low_strike = float(options[0].strike)
+    diff = high_strike-low_strike
+    num = 50
+    strikes = np.linspace(high_strike,low_strike,num=num)
+    lasts,dlasts,ddlasts = [0 for i in range(50)]
+    for option in options:
+        lasts,dlasts,ddlasts += RND(option,rfr,div)
+    return lasts,dlasts,ddlasts
+
+def ddlast(options,rfr,div):
+    high_strike = float(options[-1].strike)
+    low_strike = float(options[0].strike)
+    diff = high_strike-low_strike
+    num = 50
+    strikes = np.linspace(high_strike,low_strike,num=num)
+    lasts,dlasts,ddlasts = [0 for i in range(50)]
+    for option in options:
+        lasts,dlasts,ddlasts += RND(option,rfr,div)
+    return lasts,dlasts,ddlasts
+
+def double(x):
+    return 2*x
 
 def main():
+    print("running main")
     
-
-    ##checking vega
+"""     ##checking vega
     rfr = 0.28
     div = 0.0
 
@@ -79,7 +99,7 @@ def main():
     option1 = aapl.calls[1]
 
     theoretical_vega = vega(option1,rfr,div)
-    print("theoretical vega = " + str(theoretical_vega) + " while real vega = " + str(option1.vega))
+    print("theoretical vega = " + str(theoretical_vega) + " while real vega = " + str(option1.vega)) """
 
 if __name__ == "__main__":
     main()

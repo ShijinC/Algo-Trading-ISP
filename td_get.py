@@ -72,7 +72,7 @@ def download_option_chain(ticker):
     r = client.get_option_chain(
         ticker,
         strike=134,
-        strike_count=50,
+        strike_count=1,
         include_quotes=True,
         interval=2,
         from_date=datetime.datetime(2021, 4, 19),

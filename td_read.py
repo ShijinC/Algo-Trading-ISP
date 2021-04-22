@@ -20,7 +20,7 @@ def define_graphing_metrics(options):
     graphing_data["strike"] = [i.strike for i in options]
     graphing_data["extrinsic"] = [i.extrinsic for i in options]
     graphing_data["intrinsic"] = [i.intrinsic for i in options]
-    graphing_data["last"],graphing_data["dlast"],graphing_data["ddlast"] = dC(options)
+    graphing_data["last"],graphing_data["dlast"],graphing_data["ddlast"] = RND_List(options)
     graphing_data["totalvolume"] = sum([i.totalvol for i in options])
     graphing_data["relative_volume"] = [i.totalvol / graphing_data["totalvolume"] for i in options]
     graphing_data["totalopeninterest"] = sum([i.openinterst for i in options])
