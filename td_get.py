@@ -72,11 +72,11 @@ def download_option_chain(ticker):
     r = client.get_option_chain(
         ticker,
         strike=134,
-        strike_count=2,
+        strike_count=50,
         include_quotes=True,
         interval=2,
         from_date=datetime.datetime(2021, 4, 19),
-        to_date=datetime.datetime(2021, 4, 30)
+        to_date=datetime.datetime(2021, 4, 25)
         )
     with open("./data/"+ticker+'.json', 'w') as outfile:
         json.dump(r.json(), outfile)

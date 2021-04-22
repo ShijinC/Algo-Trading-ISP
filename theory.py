@@ -61,6 +61,12 @@ def RND(option,rfr,dividend):
         2*d1
     )
 
+def dC(options):
+    last = [i.last for i in options]
+    dlast = [abs(j-i) for i, j in zip(last[:-1], last[1:])]
+    ddlast = [abs(j-i) for i, j in zip(dlast[:-1], dlast[1:])]
+    return last,dlast,ddlast
+
 def main():
     
 
