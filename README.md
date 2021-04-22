@@ -1,20 +1,24 @@
 # Algo-Trading-ISP
 
 ## Progress
-
-- Figured out how to use the API from [TD Ameritrade](https://developer.tdameritrade.com/) and [FRED (Federal Reserve Economic Data)](https://fred.stlouisfed.org/docs/api/fred/)
-- Able to freely import data from TD Ameritrade API, FRED API, and Sentiment API (examples in td_test.py, fred_test.py, and stm_test.py)
+- used autodiff to obtain RNDs
+- implemented BS formula in python 
+- Made rough visualizations using matplotlib
 - formatted option chain data from td
-- Ready to visualize
+- Able to freely import data from TD Ameritrade API, FRED API, and Sentiment API (examples in td_test.py, fred_test.py, and stm_test.py)
+- Figured out how to use the API from [TD Ameritrade](https://developer.tdameritrade.com/) and [FRED (Federal Reserve Economic Data)](https://fred.stlouisfed.org/docs/api/fred/)
 
 ## Next Steps
 
-1. Read Resources on creating distribution
-2. Create distribution generation model
-3. Travarse through selected targets
-4. Trade the ones with the largest margin of error
-5. Build backtesting platform to calculate performance data on the model
-6. Visualize!!
+1. Calculate volatility for RNDs
+2. Scale code to general tickers
+3. unload dataset - done by 23rd
+4. get data from Google Trend API
+5. Produce more visuals based on categories
+6. Make rough algorithm - done by 24th
+7. Make backtesting frame
+8. produce performance stats - done by 25th
+9. Make powerpoint - done by 26th
 
 ### Avaliable Data:
 
