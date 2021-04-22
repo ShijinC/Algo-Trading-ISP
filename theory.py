@@ -47,42 +47,18 @@ def vomma(option,rfr,dividend):
     d2 = d1 - volatility * math.sqrt(life)
     vomma = spot * math.exp(dividend*-1*life) * math.sqrt(life) * (1/math.sqrt(2*math.pi)) * math.exp(d1**2/-2) * (d1*d2/volatility)
     return vomma
+#life and vol are pre_sized
+def last(spot=133.0,life=0.1,strike=130.0,volatility=0.5,rfr=0.02,dividend=0.0):
+    return Black_Scholes_Option_Price(spot,life, strike,volatility,rfr,dividend)
 
+def dlast(spot=133.0,life=0.1,strike=130.0,volatility=0.5,rfr=0.02,dividend=0.0):
+    dc = grad(Black_Scholes_Option_Price,2)
+    return dc(spot,life,strike,volatility,rfr,dividend)
 
-def strike(num):
-    strike = 
-
-def last(options,rfr,div):
-    high_strike = float(options[-1].strike)
-    low_strike = float(options[0].strike)
-    num = 50
-    strikes = np.linspace(high_strike,low_strike,num=num)
-    lasts,dlasts,ddlasts = [0 for i in range(50)]
-    for option in options:
-        lasts,dlasts,ddlasts += RND(option,rfr,div)
-    return lasts,dlasts,ddlasts
-
-def dlast(options,rfr,div):
-    high_strike = float(options[-1].strike)
-    low_strike = float(options[0].strike)
-    diff = high_strike-low_strike
-    num = 50
-    strikes = np.linspace(high_strike,low_strike,num=num)
-    lasts,dlasts,ddlasts = [0 for i in range(50)]
-    for option in options:
-        lasts,dlasts,ddlasts += RND(option,rfr,div)
-    return lasts,dlasts,ddlasts
-
-def ddlast(options,rfr,div):
-    high_strike = float(options[-1].strike)
-    low_strike = float(options[0].strike)
-    diff = high_strike-low_strike
-    num = 50
-    strikes = np.linspace(high_strike,low_strike,num=num)
-    lasts,dlasts,ddlasts = [0 for i in range(50)]
-    for option in options:
-        lasts,dlasts,ddlasts += RND(option,rfr,div)
-    return lasts,dlasts,ddlasts
+def ddlast(spot=133.0,life=0.1,strike=130.0,volatility=0.5,rfr=0.02,dividend=0.0):
+    dc = grad(Black_Scholes_Option_Price,2)
+    ddc = grad(dc,2)
+    return ddc(spot,life,strike,volatility,rfr,dividend)
 
 def double(x):
     return 2*x

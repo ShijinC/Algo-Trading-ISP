@@ -20,7 +20,27 @@ def define_graphing_metrics(options):
     graphing_data["strike"] = [i.strike for i in options]
     graphing_data["extrinsic"] = [i.extrinsic for i in options]
     graphing_data["intrinsic"] = [i.intrinsic for i in options]
-    graphing_data["last"],graphing_data["dlast"],graphing_data["ddlast"] = RND_List(options)
+    graphing_data["price"] = [i.last for i in options]
+    rfr = 0.003
+    div = 0
+    #high_strike = options[-1].strike
+    #low_strike = options[0].strike
+    #diff = high_strike - low_strike
+    high_strike = 150
+    low_strike = 120
+    diff = 30
+    graphing_data["smooth_strike"] = [low_strike + 0.1*float(i) for i in range(int(diff)*10)]
+    graphing_data["last"] = []
+    graphing_data["dlast"] = []
+    graphing_data["ddlast"] = []
+    option = options[0]
+    print(high_strike)
+    print(len(graphing_data["smooth_strike"]))
+    for i in graphing_data["smooth_strike"]:
+        graphing_data["last"].append(last(option.stockprice,option.daystoexpiration/365,i,option.TV/100,rfr,div))
+        graphing_data["dlast"].append(dlast(option.stockprice,option.daystoexpiration/365,i,option.TV/100,rfr,div))
+        graphing_data["ddlast"].append(ddlast(option.stockprice,option.daystoexpiration/365,i,option.TV/100,rfr,div))    
+
     graphing_data["totalvolume"] = sum([i.totalvol for i in options])
     graphing_data["relative_volume"] = [i.totalvol / graphing_data["totalvolume"] for i in options]
     graphing_data["totalopeninterest"] = sum([i.openinterst for i in options])
@@ -54,7 +74,7 @@ def make_graphs(data):
     axs[0][0].grid()
     axs[0][0].set_title("Price vs Strike") """
 
-    axs[0][0].plot(data["strike"],data["last"],color="C1")
+    axs[0][0].plot(data["smooth_strike"],data["last"],color="C1")
     #axs[0][0].scatter(data["strike"],data["last"],color="C1",marker='.')
     axs[0][0].grid()
     axs[0][0].set_title("Price vs Strike")
@@ -65,7 +85,7 @@ def make_graphs(data):
     axs[0][1].grid()
     axs[0][1].set_title("Extrinsic Value vs Strike") """
 
-    axs[0][1].plot(data["strike"][:-1],data["dlast"],color="C0")
+    axs[0][1].plot(data["smooth_strike"],data["dlast"],color="C0")
     #axs[0][1].scatter(data["strike"][:-1],data["dlast"],color="C0",marker='.')
     axs[0][1].grid()
     axs[0][1].axvline(data["underlying_price"])
@@ -76,7 +96,7 @@ def make_graphs(data):
     axs[1][0].grid()
     axs[1][0].set_title("Intrinsic Value vs Strike") """
 
-    axs[1][0].plot(data["strike"][:-2],data["ddlast"],color="C2")
+    axs[1][0].plot(data["smooth_strike"],data["ddlast"],color="C2")
     #axs[1][0].scatter(data["strike"][:-2],data["ddlast"],marker='.')
     axs[1][0].grid()
     axs[1][0].set_title("D_D_Price vs Strike")
