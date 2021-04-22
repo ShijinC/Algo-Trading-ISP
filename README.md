@@ -14,35 +14,12 @@
 2. Scale code to general tickers
 3. unload dataset - done by 23rd
 4. get data from Google Trend API
-5. Produce more visuals based on categories
-6. Make rough algorithm - done by 24th
-7. Make backtesting frame
-8. produce performance stats - done by 25th
-9. Make powerpoint - done by 26th
-
-### Avaliable Data:
-
-TD Ameritrade
-- Instrument Info (fundamental & technical of stocks)
-- Account Info
-- Option Chain (option data of stocks)
-- Price History (Historical data of stocks)
-- Current Quote
-- Transaction History
-- Saved Order
-- Get Mover ()
-
-FRED API (Federal Reserve Economic Data)
-- [Basically any economic data](https://fred.stlouisfed.org/)
-- Including historical data
-
-Social Sentiment
-- Rate Limit: 25/Day 5/s
-- Stock Sentiment Score
-- Industry Sentiment Score
-
-## Current Ideas
-- Using Option Chain data to create probability distribution of the underlying.
+5. create universe using fundamental data from td
+6. Produce more visuals based on universes
+7. Make rough algorithm - done by 24th
+8. Make backtesting frame
+9. produce performance stats - done by 25th
+10. Make powerpoint - done by 26th
 
 ## Resources
 - [fredapi documentation](https://github.com/mortada/fredapi)
