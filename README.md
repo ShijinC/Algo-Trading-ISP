@@ -10,16 +10,17 @@
 
 ## Next Steps
 
-1. Calculate volatility for RNDs
-2. Scale code to general tickers
-3. unload dataset - done by 23rd
-4. get data from Google Trend API
-5. create universe using fundamental data from td
-6. Produce more visuals based on universes
-7. Make rough algorithm - done by 24th
-8. Make backtesting frame
-9. produce performance stats - done by 25th
-10. Make powerpoint - done by 26th
+1. ~~Calculate volatility for RNDs
+2. Indicatorize RND
+3. ~~Scale code to general tickers
+4. ~~unload dataset - done by 23rd
+5. get data from Google Trend API
+6. create universe using fundamental data from td
+7. Produce more visuals based on universes
+8. Make rough algorithm - done by 24th
+9. Make backtesting frame
+10. produce performance stats - done by 25th
+11. Make powerpoint - done by 26th
 
 ## Resources
 - [fredapi documentation](https://github.com/mortada/fredapi)
