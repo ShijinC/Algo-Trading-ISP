@@ -37,15 +37,19 @@ def define_graphing_metrics(options):
     print(high_strike)
     print(len(graphing_data["smooth_strike"]))
     for i in graphing_data["smooth_strike"]:
-        graphing_data["last"].append(last(option.stockprice,option.daystoexpiration/365,i,option.TV/100,rfr,div))
-        graphing_data["dlast"].append(dlast(option.stockprice,option.daystoexpiration/365,i,option.TV/100,rfr,div))
-        graphing_data["ddlast"].append(ddlast(option.stockprice,option.daystoexpiration/365,i,option.TV/100,rfr,div))    
+        graphing_data["last"].append(last(option.stockprice,option.daystoexpiration/365,i,option.volatility/100,rfr,div))
+        graphing_data["dlast"].append(dlast(option.stockprice,option.daystoexpiration/365,i,option.volatility/100,rfr,div))
+        graphing_data["ddlast"].append(ddlast(option.stockprice,option.daystoexpiration/365,i,option.volatility/100,rfr,div))
+        #graphing_data["last"].append(last(option.stockprice,option.daystoexpiration/365,i,option.TV/100,rfr,div))
+        #graphing_data["dlast"].append(dlast(option.stockprice,option.daystoexpiration/365,i,option.TV/100,rfr,div))
+        #graphing_data["ddlast"].append(ddlast(option.stockprice,option.daystoexpiration/365,i,option.TV/100,rfr,div))       
 
     graphing_data["totalvolume"] = sum([i.totalvol for i in options])
     graphing_data["relative_volume"] = [i.totalvol / graphing_data["totalvolume"] for i in options]
     graphing_data["totalopeninterest"] = sum([i.openinterst for i in options])
     graphing_data["relative_interest"] = [i.openinterst / graphing_data["totalopeninterest"] for i in options]
     graphing_data["interest"] = [i.openinterst for i in options]
+    graphing_data["IV"] = [i.TV for i in options]
     graphing_data["spread"] = [i.ask - i.bid for i in options]
     graphing_data["spread_ratio"] = [(i.ask - i.bid) / i.last for i in options]
     graphing_data["size_spread"] = [i.asksize - i.bidsize for i in options]
@@ -102,10 +106,10 @@ def make_graphs(data):
     axs[1][0].set_title("D_D_Price vs Strike")
     axs[1][0].axvline(data["underlying_price"])
 
-    """axs[1][1].plot(x_strike,x_relative_volume,color="C3")
-    axs[1][1].scatter(x_strike,x_relative_volume,color="C3",marker='.')
+    axs[1][1].plot(data["strike"],data["IV"],color="C3")
+    axs[1][1].scatter(data["strike"],data["IV"],color="C3",marker='.')
     axs[1][1].grid()
-    axs[1][1].set_title("Relative Volume vs Strike")
-    axs[1][1].axvline(underlying_price) """
+    axs[1][1].set_title("Implied Volatility vs Strike")
+    axs[1][1].axvline(data["underlying_price"]) 
 
     plt.show()
