@@ -6,6 +6,55 @@ from theory import *
 #import numpy
 import matplotlib.pyplot as plt
 
+class stock():
+    def __init__(self,option_chain,fundamental):
+        self.option_chain = option_chain
+        self.fundamental = fundamental
+
+class option_chain():
+    def __init__(self,data):
+        assert data["status"]=="SUCCESS"
+        self.symbol = data["symbol"]
+        self.underlying = data["underlying"]
+        self.callraw = data["callExpDateMap"]
+        self.putraw = data["putExpDateMap"]
+        self.calls = []
+        self.puts = []
+        for key,value in self.callraw.items():
+            for k,v in value.items():
+                for i in v:
+                    self.calls.append(options(i,data["underlying"]["last"]))
+
+class options():
+    def __init__(self,dic,price):
+        self.stockprice = float(price)
+        self.type = dic["putCall"]
+        self.bid = float(dic["bid"])
+        self.ask = float(dic["ask"])
+        self.strike = float(dic["strikePrice"])
+        self.last = float(dic["last"])
+        self.mark = float(dic["mark"])
+        self.bidsize = float(dic["bidSize"])
+        self.asksize = float(dic["askSize"])
+        self.highprice = float(dic["highPrice"])
+        self.lowprice = float(dic["lowPrice"])
+        self.totalvol = float(dic["totalVolume"])
+        self.volatility = float(dic["volatility"])
+        self.delta = float(dic["delta"])
+        self.gamma = float(dic["gamma"])
+        self.theta = float(dic["theta"])
+        self.vega = float(dic["vega"])
+        self.rho = float(dic["rho"])
+        self.openinterst = float(dic["openInterest"])
+        self.timevalue = float(dic["timeValue"])
+        self.TOV = float(dic["theoreticalOptionValue"])
+        self.TV = float(dic["theoreticalVolatility"])
+        self.expiredate = dic["expirationDate"]
+        self.daystoexpiration = int(dic["daysToExpiration"])
+        self.inthemoney = dic["inTheMoney"]
+        self.intrinsic = self.stockprice - self.strike
+        self.extrinsic = self.last - self.intrinsic
+
 
 def load_option_chain(name):
     with open("./data/"+name+'.json') as outfile:
@@ -13,7 +62,12 @@ def load_option_chain(name):
         data = option_chain(data)
         print("Option Chain Loaded")
         return data
-    
+
+def load_fundamental(name):
+    with open("./data/fundamentals.json") as outfile:
+        data = json.load(outfile)
+        print("Fundamental Loaded")
+        return data   
 
 def define_graphing_metrics(options):
     graphing_data = {}
@@ -113,3 +167,12 @@ def make_graphs(data):
     axs[1][1].axvline(data["underlying_price"]) 
 
     plt.show()
+
+def main():
+
+    fund = load_fundamental(["AAPL"])
+    aapl = stock(load_option_chain("aapl"),fund["AAPL"]["fundamental"])
+    print(aapl)
+
+if __name__ == "__main__":
+    main()
