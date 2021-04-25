@@ -1,6 +1,6 @@
 import math
-from td_get import *
-from td_read import *
+from download import *
+from reader import *
 import autograd.numpy as np
 from autograd.scipy.stats import norm
 from autograd.extend import primitive, defvjp
@@ -59,9 +59,6 @@ def ddlast(spot=133.0,life=0.1,strike=130.0,volatility=0.5,rfr=0.02,dividend=0.0
     dc = grad(Black_Scholes_Option_Price,2)
     ddc = grad(dc,2)
     return ddc(spot,life,strike,volatility,rfr,dividend)
-
-def double(x):
-    return 2*x
 
 def main():
     print("running main")

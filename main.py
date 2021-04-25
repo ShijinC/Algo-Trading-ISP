@@ -1,20 +1,15 @@
-from td_read import *
-from td_get import *
+from reader import *
+from download import *
 from theory import *
 from autograd import grad
 import autograd.numpy as np
 
-rfr = 0.002
-div = 0.0
 
-aapl = load_option_chain("aapl")
+#data = define_graphing_metrics(options)
+#make_graphs(data)
 
-option1 = aapl.calls[0]
-options = aapl.calls
-#print(ddlast(option1,131.0,rfr,div))
-data = define_graphing_metrics(options)
-make_graphs(data)
-
+sp500 = [key for key in load_sp500_list()]
+print(sp500)
 
 """ #print(x)
 #print([i for i in x])

@@ -1,10 +1,21 @@
 import tda
 import json
-from td_get import *
+from download import *
 from theory import *
 #import pandas
 #import numpy
 import matplotlib.pyplot as plt
+import csv
+
+def load_sp500_list():
+    sp500 = {}
+    with open('s&p 500.csv', newline='') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            sp500[row["Symbol"]] = []
+            sp500[row["Symbol"]].append(row['Name'])
+            sp500[row["Symbol"]].append(row['Sector'])
+    return sp500
 
 class stock():
     def __init__(self,option_chain,fundamental):
