@@ -40,20 +40,34 @@ def download_option_chain(ticker):
         strike_count=15,
         include_quotes=True,
         interval=2,
-        from_date=datetime.datetime(2021, 4, 19),
-        to_date=datetime.datetime(2021, 4, 25)
+        from_date=datetime.datetime(2021, 5, 4),
+        to_date=datetime.datetime(2021, 5, 6)
         )
     with open("./data/"+ticker+'.json', 'w') as outfile:
         json.dump(r.json(), outfile)
 
     print("\n","Option Chain Data Download Complete.")
 
+def download_stock_quote(ticker):
+    r = client.get_price_history(
+        ticker,
+        period_type=client.PriceHistory.PeriodType.YEAR,
+        period=client.PriceHistory.Period.ONE_YEAR,
+        frequency_type=client.PriceHistory.FrequencyType.WEEKLY,
+        frequency=client.PriceHistory.Frequency.WEEKLY
+        )
+    with open("./data/s_"+ticker+'.json', 'w') as outfile:
+        json.dump(r.json(), outfile)
+
+    print("\n","Price History Data Download Complete.")
+
 def main():
     
     init()
     #test_client()
-    #download_option_chain("AAPL")
-    download_fundamentals("AAPL")
+    download_option_chain("SPY")
+    #download_fundamentals("AAPL")
+    #download_stock_quote("AAPL")
 
 if __name__ == "__main__":
     main()

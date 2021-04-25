@@ -5,11 +5,16 @@ from autograd import grad
 import autograd.numpy as np
 
 
-#data = define_graphing_metrics(options)
-#make_graphs(data)
+aapl = load_option_chain("aapl").calls
+spy = load_option_chain("SPY").calls
+option = aapl[0]
+doge_trend = load_trend("doge")
+doge_price = load_price("doge")
+data = define_graphing_metrics(spy,doge_trend,doge_price)
+make_graphs(data)
 
-sp500 = [key for key in load_sp500_list()]
-print(sp500)
+#sp500 = [key for key in load_sp500_list()]
+#print(sp500)
 
 """ #print(x)
 #print([i for i in x])

@@ -5,6 +5,7 @@ import autograd.numpy as np
 from autograd.scipy.stats import norm
 from autograd.extend import primitive, defvjp
 from autograd import grad
+from scipy.interpolate import interp1d,splev
 
 #EVERYTHING IN PERCENTAGE VALUE
 def Black_Scholes_Option_Price(spot=133.0,life=0.1,strike=130.0,volatility=0.5,rfr=0.02,dividend=0.0):
@@ -26,6 +27,13 @@ def Black_Scholes_Option_Price(spot=133.0,life=0.1,strike=130.0,volatility=0.5,r
 """ def Black_Scholes_Option_Volatility(spot,strike,life,volatility,rfr,dividend):
     spot * math.exp(dividend*-1*life) * """
 
+def volatility(options):
+    vol = [i.volatility for i in options]
+    strike = [i.strike for i in options]
+    #vola = splev(strike, vol, der=1)
+    vola = interp1d(strike, vol, kind='linear',fill_value="extrapolate")
+    return vola
+    
 def vega(option,rfr,dividend):
     spot = option.stockprice
     life = option.daystoexpiration / 365
@@ -58,7 +66,7 @@ def dlast(spot=133.0,life=0.1,strike=130.0,volatility=0.5,rfr=0.02,dividend=0.0)
 def ddlast(spot=133.0,life=0.1,strike=130.0,volatility=0.5,rfr=0.02,dividend=0.0):
     dc = grad(Black_Scholes_Option_Price,2)
     ddc = grad(dc,2)
-    return ddc(spot,life,strike,volatility,rfr,dividend)
+    return ddc(spot,life,strike,volatility,rfr,dividend) * np.exp(life*rfr)
 
 def main():
     print("running main")

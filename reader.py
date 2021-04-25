@@ -7,15 +7,37 @@ from theory import *
 import matplotlib.pyplot as plt
 import csv
 
+
 def load_sp500_list():
     sp500 = {}
-    with open('s&p 500.csv', newline='') as csvfile:
+    with open('data/s&p 500.csv', newline='') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
             sp500[row["Symbol"]] = []
             sp500[row["Symbol"]].append(row['Name'])
             sp500[row["Symbol"]].append(row['Sector'])
     return sp500
+    
+
+def load_trend(name):
+    file = {}
+    with open('data/'+name+'_trend.csv', newline='') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            date = datetime.datetime.strptime(row["Week"], '%m/%d/%Y')
+            file[date] = []
+            file[date].append(float(row['doge: (United States)']))
+    return file
+
+def load_price(name):
+    file = {}
+    with open('data/'+name+'_price.csv', newline='') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            date = datetime.datetime.strptime(row["Date"], '%m/%d/%Y')
+            file[date] = []
+            file[date].append(float(row['Closing Price (USD)']))
+    return file
 
 class stock():
     def __init__(self,option_chain,fundamental):
@@ -80,31 +102,29 @@ def load_fundamental(name):
         print("Fundamental Loaded")
         return data   
 
-def define_graphing_metrics(options):
+def define_graphing_metrics(options,trend=None,price=None):
     graphing_data = {}
     graphing_data["strike"] = [i.strike for i in options]
     graphing_data["extrinsic"] = [i.extrinsic for i in options]
     graphing_data["intrinsic"] = [i.intrinsic for i in options]
     graphing_data["price"] = [i.last for i in options]
-    rfr = 0.003
+    rfr = 0.03
     div = 0
-    #high_strike = options[-1].strike
-    #low_strike = options[0].strike
-    #diff = high_strike - low_strike
-    high_strike = 150
-    low_strike = 120
-    diff = 30
+    high_strike = options[-1].strike
+    low_strike = options[0].strike
+    diff = high_strike - low_strike
     graphing_data["smooth_strike"] = [low_strike + 0.1*float(i) for i in range(int(diff)*10)]
     graphing_data["last"] = []
     graphing_data["dlast"] = []
     graphing_data["ddlast"] = []
+    graphing_data["smooth_vol"] = []
     option = options[0]
-    print(high_strike)
-    print(len(graphing_data["smooth_strike"]))
+    vol = volatility(options)
     for i in graphing_data["smooth_strike"]:
-        graphing_data["last"].append(last(option.stockprice,option.daystoexpiration/365,i,option.volatility/100,rfr,div))
-        graphing_data["dlast"].append(dlast(option.stockprice,option.daystoexpiration/365,i,option.volatility/100,rfr,div))
-        graphing_data["ddlast"].append(ddlast(option.stockprice,option.daystoexpiration/365,i,option.volatility/100,rfr,div))
+        graphing_data["smooth_vol"].append(vol(i))
+        graphing_data["last"].append(last(option.stockprice,option.daystoexpiration/365,i,vol(i)/100,rfr,div))
+        graphing_data["dlast"].append(dlast(option.stockprice,option.daystoexpiration/365,i,vol(i)/100,rfr,div))
+        graphing_data["ddlast"].append(ddlast(option.stockprice,option.daystoexpiration/365,i,vol(i)/100,rfr,div))
         #graphing_data["last"].append(last(option.stockprice,option.daystoexpiration/365,i,option.TV/100,rfr,div))
         #graphing_data["dlast"].append(dlast(option.stockprice,option.daystoexpiration/365,i,option.TV/100,rfr,div))
         #graphing_data["ddlast"].append(ddlast(option.stockprice,option.daystoexpiration/365,i,option.TV/100,rfr,div))       
@@ -114,12 +134,19 @@ def define_graphing_metrics(options):
     graphing_data["totalopeninterest"] = sum([i.openinterst for i in options])
     graphing_data["relative_interest"] = [i.openinterst / graphing_data["totalopeninterest"] for i in options]
     graphing_data["interest"] = [i.openinterst for i in options]
-    graphing_data["IV"] = [i.TV for i in options]
+    graphing_data["IV"] = [i.volatility for i in options]
     graphing_data["spread"] = [i.ask - i.bid for i in options]
     graphing_data["spread_ratio"] = [(i.ask - i.bid) / i.last for i in options]
     graphing_data["size_spread"] = [i.asksize - i.bidsize for i in options]
     graphing_data["underlying_price"] = options[0].stockprice
+    if trend != None:
+        graphing_data['trend_date'] = [key for key in trend]
+        graphing_data['trend_score'] = [trend[key] for key in trend]
+    if price != None:
+        graphing_data['price_date'] = [key for key in price]
+        graphing_data['price_price'] = [price[key] for key in price]
     return graphing_data
+
 
 def make_graphs(data):
     gridspec = {
@@ -138,52 +165,63 @@ def make_graphs(data):
         gridspec_kw=gridspec
     )
 
-    """ axs[0][0].plot(x_strike,y_last,color="C1")
-    axs[0][0].scatter(x_strike,y_last,color="C1")
-    axs[0][0].grid()
-    axs[0][0].set_title("Price vs Strike") """
-
-    axs[0][0].plot(data["smooth_strike"],data["last"],color="C1")
+    ############### RND ###############
+    axs[0][0].plot(data["smooth_strike"],data["last"],color="C1",linewidth=1.0)
     #axs[0][0].scatter(data["strike"],data["last"],color="C1",marker='.')
     axs[0][0].grid()
     axs[0][0].set_title("Price vs Strike")
     axs[0][0].axvline(data["underlying_price"])
 
-    """ axs[0][1].plot(x_strike,x_extrinsic,color="C0")
-    axs[0][1].scatter(x_strike,x_extrinsic,color="C0")
-    axs[0][1].grid()
-    axs[0][1].set_title("Extrinsic Value vs Strike") """
-
-    axs[0][1].plot(data["smooth_strike"],data["dlast"],color="C0")
+    axs[0][1].plot(data["smooth_strike"],data["dlast"],color="C0",linewidth=1.0)
     #axs[0][1].scatter(data["strike"][:-1],data["dlast"],color="C0",marker='.')
     axs[0][1].grid()
     axs[0][1].axvline(data["underlying_price"])
     axs[0][1].set_title("D_Price vs Strike")
 
-    """ axs[1][0].plot(x_strike,x_intrinsic,color="C2")
-    axs[1][0].scatter(x_strike,x_intrinsic,color="C2")
+    axs[1][0].plot(data["smooth_strike"],data["ddlast"],color="C2",linewidth=1.0)
+    #axs[1][0].scatter(data["strike"][:-2],data["ddlast"],marker='.')
     axs[1][0].grid()
-    axs[1][0].set_title("Intrinsic Value vs Strike") """
+    axs[1][0].set_title("D_D_Price (Risk Neutral Distribution) vs Strike")
+    axs[1][0].axvline(data["underlying_price"])
+    ############### RND ###############
+
+    ############### Trend ###############
+    """ axs[0][0].plot(data["trend_date"],data["trend_score"],color="C1",linewidth=1.0)
+    axs[0][0].twinx().plot(data["price_date"],data["price_price"],color="C3",linewidth=1.0)
+    #axs[0][0].scatter(data["strike"],data["last"],color="C1",marker='.')
+    axs[0][0].grid()
+    axs[0][0].set_title("doge relatie interest vs doge exchange rate") """
+    ############### TREND ###############
+
+    """ axs[0][1].plot(data["smooth_strike"],data["dlast"],color="C0")
+    #axs[0][1].scatter(data["strike"][:-1],data["dlast"],color="C0",marker='.')
+    axs[0][1].grid()
+    axs[0][1].axvline(data["underlying_price"])
+    axs[0][1].set_title("D_Price vs Strike")
 
     axs[1][0].plot(data["smooth_strike"],data["ddlast"],color="C2")
     #axs[1][0].scatter(data["strike"][:-2],data["ddlast"],marker='.')
     axs[1][0].grid()
-    axs[1][0].set_title("D_D_Price vs Strike")
+    axs[1][0].set_title("D_D_Price (Risk Neutral Distribution) vs Strike")
     axs[1][0].axvline(data["underlying_price"])
-
+    """
+    
     axs[1][1].plot(data["strike"],data["IV"],color="C3")
-    axs[1][1].scatter(data["strike"],data["IV"],color="C3",marker='.')
+    axs[1][1].twinx().plot(data["smooth_strike"],data["smooth_vol"],color="C3")
     axs[1][1].grid()
     axs[1][1].set_title("Implied Volatility vs Strike")
-    axs[1][1].axvline(data["underlying_price"]) 
-
+    axs[1][1].axvline(data["underlying_price"])
+    
     plt.show()
 
 def main():
 
-    fund = load_fundamental(["AAPL"])
-    aapl = stock(load_option_chain("aapl"),fund["AAPL"]["fundamental"])
-    print(aapl)
+    #fund = load_fundamental(["AAPL"])
+    #aapl = stock(load_option_chain("aapl"),fund["AAPL"]["fundamental"])
+    #print(aapl)
+
+    file = load_trend("doge")
+    print(file)
 
 if __name__ == "__main__":
     main()
