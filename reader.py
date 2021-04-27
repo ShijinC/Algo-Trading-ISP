@@ -24,7 +24,7 @@ def load_trend(name):
     with open('data/'+name+'_trend.csv', newline='') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
-            date = datetime.datetime.strptime(row["Week"], '%m/%d/%Y')
+            date = datetime.datetime.strptime(row["Day"], '%m/%d/%Y')
             file[date] = []
             file[date].append(float(row['doge: (United States)']))
     return file
@@ -110,6 +110,7 @@ def define_graphing_metrics(options,trend=None,price=None):
     graphing_data["price"] = [i.last for i in options]
     rfr = 0.03
     div = 0
+    bins = 52
     high_strike = options[-1].strike
     low_strike = options[0].strike
     diff = high_strike - low_strike
@@ -166,7 +167,7 @@ def make_graphs(data):
     )
 
     ############### RND ###############
-    axs[0][0].plot(data["smooth_strike"],data["last"],color="C1",linewidth=1.0)
+    """ axs[0][0].plot(data["smooth_strike"],data["last"],color="C1",linewidth=1.0)
     #axs[0][0].scatter(data["strike"],data["last"],color="C1",marker='.')
     axs[0][0].grid()
     axs[0][0].set_title("Price vs Strike")
@@ -182,15 +183,15 @@ def make_graphs(data):
     #axs[1][0].scatter(data["strike"][:-2],data["ddlast"],marker='.')
     axs[1][0].grid()
     axs[1][0].set_title("D_D_Price (Risk Neutral Distribution) vs Strike")
-    axs[1][0].axvline(data["underlying_price"])
+    axs[1][0].axvline(data["underlying_price"]) """
     ############### RND ###############
 
     ############### Trend ###############
-    """ axs[0][0].plot(data["trend_date"],data["trend_score"],color="C1",linewidth=1.0)
+    axs[0][0].plot(data["trend_date"],data["trend_score"],color="C1",linewidth=1.0)
     axs[0][0].twinx().plot(data["price_date"],data["price_price"],color="C3",linewidth=1.0)
     #axs[0][0].scatter(data["strike"],data["last"],color="C1",marker='.')
     axs[0][0].grid()
-    axs[0][0].set_title("doge relatie interest vs doge exchange rate") """
+    axs[0][0].set_title("doge relatie interest vs doge exchange rate")
     ############### TREND ###############
 
     """ axs[0][1].plot(data["smooth_strike"],data["dlast"],color="C0")
